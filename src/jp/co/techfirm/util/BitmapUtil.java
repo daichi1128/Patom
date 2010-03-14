@@ -154,13 +154,17 @@ public class BitmapUtil {
 		return bit;
 	}
 	
+	public static int[] calculateMozaic(Bitmap bitmap) {
+		return calculateMozaic(bitmap, null, true);
+	}
+	
 	/**
 	 * 小さな正方形に画像を分割し、各正方形の平均色を持った配列を返す
 	 * @param bitmap
 	 * @return
 	 */
-	public static int[] calculateMozaic(Bitmap bitmap) {
-		return calculateMozaic(bitmap, true);
+	public static int[] calculateMozaic(Bitmap bitmap, int[] size) {
+		return calculateMozaic(bitmap, size, true);
 	}
 
 	/**
@@ -169,7 +173,7 @@ public class BitmapUtil {
 	 * @param bitmap
 	 * @return
 	 */
-	public static int[] calculateMozaic(Bitmap bitmap, boolean isPostarization) {
+	public static int[] calculateMozaic(Bitmap bitmap, int[] aSize, boolean isPostarization) {
 		if (isPostarization)
 			makePostarizationTable(8, 8, 8);
 
@@ -184,6 +188,11 @@ public class BitmapUtil {
 		height = originalHeight / dot;
 		size = width * height;
 		colorTable = new int[size];
+		
+		if (aSize != null && aSize.length > 1) {
+			aSize[0] = width;
+			aSize[1] = height;
+		}
 
 		Log.i(TAG, "width: " + width + " height: " + height + " length: "
 				+ size);
@@ -221,7 +230,7 @@ public class BitmapUtil {
 					gg = gg / square;
 					bb = bb / square;
 				}
-				colorTable[i + j] = Color.rgb(rr, gg, bb);
+				colorTable[i + j * width] = Color.rgb(rr, gg, bb);
 
 			}
 		}
@@ -341,6 +350,20 @@ public class BitmapUtil {
 	public static Bitmap clipSquare(Bitmap bitmap) {
 		return clipSquare(bitmap, 0);
 	}
+	
+	public static int distance(int colorA, int colorB) {
+		int ar, ag, ab, br, bg, bb;
+		ar = Color.red(colorA);
+		ag = Color.green(colorA);
+		ab = Color.blue(colorA);
+		br = Color.red(colorB);
+		bg = Color.green(colorB);
+		bb = Color.blue(colorB);
+		
+		int distance = (ar - br) * (ar - br) + (ag - bg) * (ag - bg) + (ab - bb) * (ab - bb);
+		
+		return distance;
+	}
 
 	/**
 	 * 階調を下げる
@@ -393,5 +416,27 @@ public class BitmapUtil {
 				bt[l] = (int) (d * k);
 			}
 		}
+	}
+	
+	public static Bitmap test(Bitmap bitmap, int[] colorTable , int width, int height){
+		int dot = 8;
+		
+		Bitmap bit = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+		int[] outputPixels = new int[bitmap.getWidth() * bitmap.getHeight()];
+		int originalWidth = bitmap.getWidth();
+		for (int i=0;i<width;i++) {
+			for (int j=0;j<height;j++){
+				int moveX = i * dot;
+				int moveY = j * dot;
+				for (int k = 0; k < dot; k++) {
+					for (int l = 0; l < dot; l++) {
+						outputPixels[moveX + k + (moveY + l) * originalWidth] = colorTable[i+j * width];
+					}
+				}
+			}
+		}
+		bit.setPixels(outputPixels, 0, originalWidth, 0, 0, originalWidth, bitmap.getHeight());
+		
+		return bit;
 	}
 }

@@ -107,7 +107,7 @@ public class BaseSelectActivity extends Activity implements
 				// Log.i(TAG, "scale: 1/" + scale);
 
 				mOptions.inJustDecodeBounds = false;
-				mOptions.inSampleSize = 10;
+				mOptions.inSampleSize = 5;
 				is = getContentResolver().openInputStream(imageUri);
 				Bitmap bitmap = BitmapFactory.decodeStream(is, null, mOptions);
 				BitmapDrawable drawable = new BitmapDrawable(bitmap);
