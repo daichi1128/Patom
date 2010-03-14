@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, List!</string>
+    <string name="app_name">Patom</string>
+    <string name="part_select_activity_name">Part Select</string>
+    <string name="list_activity_name">List</string>
+    <string name="base_select_activity_name">Base Select</string>
+    <string name="detail_base_activity_name">Detail</string>
+</resources>
