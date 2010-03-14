@@ -61,6 +61,10 @@ public class CreateActivity extends Activity {
 			end = System.currentTimeMillis();
 			
 			Log.i(TAG, "process bitmap time: " + (end - start) + "ms.");
+			
+//			Bitmap resize = BitmapUtil.resize(bitmap, 8, 8);
+			
+//			return BitmapUtil.clipSquare(bitmap, 200);
 			return result;
 		}
 		
